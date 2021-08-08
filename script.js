@@ -1,4 +1,4 @@
-import Personagem from "./js/lib.js";
+import Personagem from "./js/Personagem.js";
 
 const canvas = document.querySelector('canvas');
 const contexto = canvas.getContext('2d');
