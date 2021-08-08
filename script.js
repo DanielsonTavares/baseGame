@@ -7,7 +7,6 @@ const cfg = {
     teclado: {},
 }
 
-
 const telas = {
     INICIO: {
         nome: 'telaInicial',
@@ -91,6 +90,7 @@ const telas = {
         inicializa(){
             npc1.inicializa();
             npc2.inicializa();
+
         },
         desenha(){
             npc1.desenha();
@@ -155,14 +155,14 @@ const npc1 = new Personagem({
 const npc2 = new Personagem({
     ctx: contexto,
     nome: 'npc2',
-    spriteX: 432,
+    spriteX: 0,
     spriteY: 0,
     spriteSrc: './img/People2.png',
     tamanhoSpriteX: 48,
     tamanhoSpriteY: 48,
     posX: 160,
     posY: 90,
-    
+    tipoControle: 'secundario'
 });
 
 
@@ -187,5 +187,5 @@ function loop(){
     requestAnimationFrame(loop);
 }
 
-telas.mudaParaTela(telas.INICIO);
+telas.mudaParaTela(telas.JOGO);
 loop();

@@ -2,7 +2,8 @@ export default class Personagem{
     constructor({ctx, nome, spriteSrc, 
         spriteX, spriteY,
         tamanhoSpriteX, tamanhoSpriteY,
-        posX, posY
+        posX, posY,
+        tipoControle = 'primario'
     }){
         this.ctx = ctx;
         this.nome = nome;
@@ -27,6 +28,8 @@ export default class Personagem{
         this.teclado = {};
 
         this.frame = 0;
+
+        this.controle = tipoControle
     }
 
     toString(){
@@ -68,24 +71,46 @@ export default class Personagem{
 
         this.spriteX = this.frameAnimacaoHorizontal[ this.frameAtual ];
 
-        if(this.teclado.keys && this.teclado.keys['ArrowDown']){
-            this.posY += 2;
-            this.spriteY = this.frameAnimacaoVertical.frente;
-        }
+        if(this.controle === 'primario'){
+            if(this.teclado.keys && this.teclado.keys['ArrowDown']){
+                this.posY += 2;
+                this.spriteY = this.frameAnimacaoVertical.frente;
+            }
 
-        if(this.teclado.keys && this.teclado.keys['ArrowUp']){
-            this.posY -= 2;
-            this.spriteY = this.frameAnimacaoVertical.costa;
-        }
+            if(this.teclado.keys && this.teclado.keys['ArrowUp']){
+                this.posY -= 2;
+                this.spriteY = this.frameAnimacaoVertical.costa;
+            }
 
-        if(this.teclado.keys && this.teclado.keys['ArrowLeft']){
-            this.posX -= 2;
-            this.spriteY = this.frameAnimacaoVertical.esquerda;
-        }
+            if(this.teclado.keys && this.teclado.keys['ArrowLeft']){
+                this.posX -= 2;
+                this.spriteY = this.frameAnimacaoVertical.esquerda;
+            }
 
-        if(this.teclado.keys && this.teclado.keys['ArrowRight']){
-            this.posX += 2;
-            this.spriteY = this.frameAnimacaoVertical.direita;
+            if(this.teclado.keys && this.teclado.keys['ArrowRight']){
+                this.posX += 2;
+                this.spriteY = this.frameAnimacaoVertical.direita;
+            }
+        }else if(this.controle === 'secundario'){
+            if(this.teclado.keys && this.teclado.keys['KeyS']){
+                this.posY += 2;
+                this.spriteY = this.frameAnimacaoVertical.frente;
+            }
+
+            if(this.teclado.keys && this.teclado.keys['KeyW']){
+                this.posY -= 2;
+                this.spriteY = this.frameAnimacaoVertical.costa;
+            }
+
+            if(this.teclado.keys && this.teclado.keys['KeyA']){
+                this.posX -= 2;
+                this.spriteY = this.frameAnimacaoVertical.esquerda;
+            }
+
+            if(this.teclado.keys && this.teclado.keys['KeyD']){
+                this.posX += 2;
+                this.spriteY = this.frameAnimacaoVertical.direita;
+            }
         }
     }
 
