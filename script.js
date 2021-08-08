@@ -1,3 +1,4 @@
+import Personagem from "./js/lib.js";
 
 const canvas = document.querySelector('canvas');
 const contexto = canvas.getContext('2d');
@@ -49,7 +50,9 @@ const telas = {
         sprMenu: {},
         inicializa(){
             this.sprMenu = new Image();
-            this.sprMenu.src = './img/menu.png'
+            this.sprMenu.src = './img/menu.png';
+            
+            this.sprMenu.PosX = 0;
         },
         atualiza(){
             if(cfg.teclado.keys && cfg.teclado.keys['Escape']){
@@ -57,34 +60,48 @@ const telas = {
             }
         },
         desenha(){
-            const menu = {
-                spriteX: 0,
-                spriteY: 0,
-                spriteWidth: 48,
-                spriteHeight: 48,
-                posX: 52,
-                posY: 200
-            }
 
-            contexto.drawImage(
-            this.sprMenu,
-            menu.spriteX, menu.spriteY,
-            menu.spriteWidth, menu.spriteHeight,
-            menu.posX, menu.posY,
-            menu.spriteWidth, menu.spriteHeight
-            )
+            contexto.fillStyle='rgba(200,200,200,1)';
+            contexto.fillRect(canvas.width/2-150, canvas.height/2-150,300,300);
+            
+            contexto.fillStyle='rgba(200,100,100,0.2)';
+            contexto.fillRect(this.sprMenu.PosX, canvas.height/2-150,60,60);
+            
+
+            // const menu = {
+            //     spriteX: 0,
+            //     spriteY: 0,
+            //     spriteWidth: 48,
+            //     spriteHeight: 48,
+            //     posX: 52,
+            //     posY: 200
+            // }
+
+            // contexto.drawImage(
+            // this.sprMenu,
+            // menu.spriteX, menu.spriteY,
+            // menu.spriteWidth, menu.spriteHeight,
+            // menu.posX, menu.posY,
+            // menu.spriteWidth, menu.spriteHeight
+            // )
         }
     },
     JOGO: {
         nome: 'jogo',
         inicializa(){
-            personagem.inicializa();
+            npc1.inicializa();
+            npc2.inicializa();
         },
         desenha(){
-            personagem.desenha();
+            npc1.desenha();
+            npc2.desenha();
         },
         atualiza(){
-            personagem.atualiza();
+            npc1.atualiza();
+            npc2.atualiza();
+            if(cfg.teclado.keys && cfg.teclado.keys['KeyM']){
+                telas.mudaParaTela(telas.MENU);
+            }
         }
     },
     ativa: {},
@@ -107,98 +124,46 @@ function start() {
         e.preventDefault();
         cfg.teclado.keys = (cfg.teclado.keys || []);
         cfg.teclado.keys[e.code] = (e.type === 'keydown')
-        console.log('keydown', e.code);
+        //console.log('keydown', e.code);
+
+        npc1.setKeyDown(e);
+        npc2.setKeyDown(e);
         
         
     });
 
     document.addEventListener('keyup', function (e) {
         cfg.teclado.keys[e.code] = (e.type === "keydown");
-        console.log('keyup', e.code);
+        //console.log('keyup', e.code);
+        npc1.setKeyUp(e);
+        npc2.setKeyUp(e);
     });
 }
 
-
-const personagem = {
-    spriteX: 48,
+const npc1 = new Personagem({
+    ctx: contexto,
+    nome: 'npc1',
+    spriteX: 144,
     spriteY: 0,
-    spriteWidth: 48,
-    spriteHeight: 48,
-    posX: 20,
+    spriteSrc: './img/People2.png',
+    tamanhoSpriteX: 48,
+    tamanhoSpriteY: 48,
+    posX: 200,
     posY: 20,
-    gravidade: 0.25,
-    velocidade: 0,
-    frameAnimacaoHorizontal: [0,48,96],
-    frameAnimacaoVertical: {
-                            frente: 0,
-                            esquerda: 48,
-                            direita: 96, 
-                            costa: 144
-                        },
-    frameAtual: 0,
-    spritesPersonagens: {},
-    inicializa(){
-        this.spritesPersonagens = new Image();
-        this.spritesPersonagens.src = './img/People2.png'
-    },
-    atualizaFrameAtual(){
-        
-        const intervaloDeFrames = 16;
-        const passouIntervalo = FRAME % intervaloDeFrames === 0;
+});
 
-        if(passouIntervalo){
-            const baseIncremento = 1;
-            const incremento = baseIncremento + this.frameAtual;
-            const baseRepeticao = this.frameAnimacaoHorizontal.length;
-            this.frameAtual = incremento % baseRepeticao;
-        }
-    },
-    andar(tecla){
-
-        this.spriteX = this.frameAnimacaoHorizontal[ this.frameAtual ];
-
-        if(cfg.teclado.keys && cfg.teclado.keys['KeyM']){
-            telas.mudaParaTela(telas.MENU);
-        }
-
-        if(cfg.teclado.keys && cfg.teclado.keys['ArrowDown']){
-            this.posY += 2;
-            this.spriteY = this.frameAnimacaoVertical.frente;
-        }
-
-        if(cfg.teclado.keys && cfg.teclado.keys['ArrowUp']){
-            this.posY -= 2;
-            this.spriteY = this.frameAnimacaoVertical.costa;
-        }
-
-        if(cfg.teclado.keys && cfg.teclado.keys['ArrowLeft']){
-            this.posX -= 2;
-            this.spriteY = this.frameAnimacaoVertical.esquerda;
-        }
-
-        if(cfg.teclado.keys && cfg.teclado.keys['ArrowRight']){
-            this.posX += 2;
-            this.spriteY = this.frameAnimacaoVertical.direita;
-        }
-    },
-
-    atualiza(){
-        this.andar();
-
-    },
-    desenha(){
-        this.atualizaFrameAtual();
-
-        contexto.drawImage(
-        this.spritesPersonagens,
-        personagem.spriteX, personagem.spriteY,
-        personagem.spriteWidth, personagem.spriteHeight,
-        personagem.posX, personagem.posY,
-        personagem.spriteWidth, personagem.spriteHeight,
-        );
-    }
-}
-
+const npc2 = new Personagem({
+    ctx: contexto,
+    nome: 'npc2',
+    spriteX: 432,
+    spriteY: 0,
+    spriteSrc: './img/People2.png',
+    tamanhoSpriteX: 48,
+    tamanhoSpriteY: 48,
+    posX: 160,
+    posY: 90,
+    
+});
 
 
 
