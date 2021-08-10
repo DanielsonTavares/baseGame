@@ -7,6 +7,8 @@ const cfg = {
     teclado: {},
 }
 
+const elementos = [];
+
 const telas = {
     INICIO: {
         nome: 'telaInicial',
@@ -88,17 +90,15 @@ const telas = {
     JOGO: {
         nome: 'jogo',
         inicializa(){
-            npc1.inicializa();
-            npc2.inicializa();
-
+            elementos.forEach(elem => elem.inicializa())
         },
         desenha(){
-            npc1.desenha();
-            npc2.desenha();
+            elementos.forEach(elem => elem.desenha())
         },
         atualiza(){
-            npc1.atualiza();
-            npc2.atualiza();
+
+            elementos.forEach(elem => elem.atualiza())
+
             if(cfg.teclado.keys && cfg.teclado.keys['KeyM']){
                 telas.mudaParaTela(telas.MENU);
             }
@@ -165,6 +165,8 @@ const npc2 = new Personagem({
     tipoControle: 'secundario'
 });
 
+elementos.push(npc1);
+elementos.push(npc2);
 
 
 
